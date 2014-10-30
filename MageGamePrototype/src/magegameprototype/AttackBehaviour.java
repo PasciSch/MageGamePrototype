@@ -16,14 +16,19 @@ public class AttackBehaviour extends Behaviour
         {
             behaviour.act(ownBehaviours, opposingBehaviours, ownPlayer, opposingPlayer);
             if(this.isFinished())
+            {
                 break;
+            }
             
             int opposingShield = behaviour.getShield();
             behaviour.setShield(opposingShield - this.getAttack());
             this.setAttack(this.getAttack() - opposingShield);
             
             if(this.getAttack() <= 0)
+            {
+                this.destroy();
                 break;
+            }
         }
         
         if (!this.isFinished())

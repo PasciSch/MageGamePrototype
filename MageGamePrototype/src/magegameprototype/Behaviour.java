@@ -38,9 +38,9 @@ public abstract class Behaviour implements IBehaviour
     @Override
     public void setShield(int shield)
     {
-        if(this.shield != 0 && shield >= 0)
+        if(this.shield != 0 && shield <= 0)
         {
-            this.isFinished = true;
+            this.destroy();
         }
         
         this.shield = shield;

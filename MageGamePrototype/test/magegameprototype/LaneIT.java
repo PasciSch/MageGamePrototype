@@ -108,4 +108,21 @@ public class LaneIT
         Assert.assertEquals(3, this.lane.getSideOne().get(0).getShield());
         Assert.assertEquals(STARTHEALTH, this.player1.getHealth());
     }
+    
+    @Test
+    public void SimpleSuperiorAttackDefenceScenario1()
+    {
+        // Given 1 shield with 4 defence
+        // When  1 superior attack of 5 is deployed
+        // Then  0 shield stays
+        // And   player takes 3 damage
+        
+        this.lane.addToSideOne(new ShieldBehaviour(Element.Fire, 4));
+
+        this.lane.addToSideTwo(new AttackBehaviour(Element.Water, 5));
+        
+        Assert.assertEquals(0, this.lane.getSideOne().size());
+        Assert.assertEquals(0, this.lane.getSideTwo().size());
+        Assert.assertEquals(STARTHEALTH - 3, this.player1.getHealth());
+    }
 }

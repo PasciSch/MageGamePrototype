@@ -10,19 +10,21 @@ public class AttackBehaviour extends Behaviour
         this.setAttack(attack);
     }
     
+    public void act(List<IBehaviour> ownBehaviours, List<IBehaviour> opposingBehaviours, IPlayer ownPlayer, IPlayer opposingPlayer)
+    {
+    }
+    
     public void deploy(List<IBehaviour> ownBehaviours, List<IBehaviour> opposingBehaviours, IPlayer ownPlayer, IPlayer opposingPlayer)
     {
         for(IBehaviour behaviour : opposingBehaviours)
         {
             behaviour.act(ownBehaviours, opposingBehaviours, ownPlayer, opposingPlayer);
             if(this.isFinished())
-            {
-                break;
+            { 
+                break; 
             }
             
-            int opposingShield = behaviour.getShield();
-            behaviour.setShield(opposingShield - this.getAttack());
-            this.setAttack(this.getAttack() - opposingShield);
+            this.AttackBehaviour(behaviour);
             
             if(this.getAttack() <= 0)
             {
@@ -33,14 +35,58 @@ public class AttackBehaviour extends Behaviour
         
         if (!this.isFinished())
         {
-            int newHealth = opposingPlayer.getHealth() - this.getAttack();
-            opposingPlayer.setHealth(newHealth);
+            AttackPlayer(opposingPlayer);
         }
         
         this.destroy();
     }
 
-    public void act(List<IBehaviour> ownBehaviours, List<IBehaviour> opposingBehaviours, IPlayer ownPlayer, IPlayer opposingPlayer)
+    private void AttackPlayer(IPlayer opposingPlayer)
     {
+        int newHealth = opposingPlayer.getHealth() - this.getAttack();
+        opposingPlayer.setHealth(newHealth);
+    }
+
+    private void AttackBehaviour(IBehaviour behaviour)
+    {
+        float adaptedShield = this.getAdaptedShield(behaviour);
+        float damagedAdaptedShield = adaptedShield - this.getAttack();
+        this.setAttack((int) (this.getAttack() - adaptedShield));
+        float realShield = this.getRealShield(damagedAdaptedShield, behaviour.getElement());
+        behaviour.setShield((int) realShield);
+    }
+
+    private float getAdaptedShield(IBehaviour behaviour)
+    {
+        float adaptedShield = behaviour.getShield();
+        
+        Element shieldElement = behaviour.getElement();
+        if (shieldElement.isSuperiorTo(this.getElement()))
+        {
+            adaptedShield = adaptedShield * 2;
+        }
+        
+        if (shieldElement.isInferiorTo(this.getElement()))
+        {
+            adaptedShield = adaptedShield / 2;
+        }
+        
+        return adaptedShield;
+        
+    }
+
+    private float getRealShield(float adaptedShield, Element shieldElement)
+    {
+        if (shieldElement.isSuperiorTo(this.getElement()))
+        {
+            adaptedShield = adaptedShield / 2;
+        }
+        
+        if (shieldElement.isInferiorTo(this.getElement()))
+        {
+            adaptedShield = adaptedShield * 2;
+        }
+        
+        return adaptedShield;
     }
 }

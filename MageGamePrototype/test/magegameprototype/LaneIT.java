@@ -112,7 +112,7 @@ public class LaneIT
     @Test
     public void SimpleSuperiorAttackDefenceScenario1()
     {
-        // Given 1 shield with 4 defence
+        // Given 1 shield with 4 defence (inferior -> 2 defence)
         // When  1 superior attack of 5 is deployed
         // Then  0 shield stays
         // And   player takes 3 damage
@@ -124,5 +124,23 @@ public class LaneIT
         Assert.assertEquals(0, this.lane.getSideOne().size());
         Assert.assertEquals(0, this.lane.getSideTwo().size());
         Assert.assertEquals(STARTHEALTH - 3, this.player1.getHealth());
+    }
+    
+    @Test
+    public void SimpleInferiorAttackDefenceScenario1()
+    {
+        // Given 1 shield with 3 defence (superior -> 6 defence)
+        // When  1 inferior attack of 5 is deployed
+        // Then  1 shield stays with 1 defence
+        // And   player takes 0 damage
+        
+        this.lane.addToSideOne(new ShieldBehaviour(Element.Nature, 3));
+
+        this.lane.addToSideTwo(new AttackBehaviour(Element.Water, 5));
+        
+        Assert.assertEquals(1, this.lane.getSideOne().size());
+        Assert.assertEquals(0, this.lane.getSideTwo().size());
+        Assert.assertEquals(1, this.lane.getSideOne().get(0).getShield());
+        Assert.assertEquals(STARTHEALTH, this.player1.getHealth());
     }
 }

@@ -49,16 +49,16 @@ public class AttackBehaviour extends Behaviour
 
     private void AttackBehaviour(IBehaviour behaviour)
     {
-        float adaptedShield = this.getAdaptedShield(behaviour);
-        float damagedAdaptedShield = adaptedShield - this.getAttack();
+        int adaptedShield = this.getAdaptedShield(behaviour);
+        int damagedAdaptedShield = adaptedShield - this.getAttack();
         this.setAttack((int) (this.getAttack() - adaptedShield));
         float realShield = this.getRealShield(damagedAdaptedShield, behaviour.getElement());
         behaviour.setShield((int) realShield);
     }
 
-    private float getAdaptedShield(IBehaviour behaviour)
+    private int getAdaptedShield(IBehaviour behaviour)
     {
-        float adaptedShield = behaviour.getShield();
+        int adaptedShield = behaviour.getShield();
         
         Element shieldElement = behaviour.getElement();
         if (shieldElement.isSuperiorTo(this.getElement()))
@@ -68,18 +68,20 @@ public class AttackBehaviour extends Behaviour
         
         if (shieldElement.isInferiorTo(this.getElement()))
         {
-            adaptedShield = adaptedShield / 2;
+            double decimalPlacesAdaptedShield = (float)adaptedShield / 2;
+            adaptedShield = (int)Math.ceil(decimalPlacesAdaptedShield);
         }
         
         return adaptedShield;
         
     }
 
-    private float getRealShield(float adaptedShield, Element shieldElement)
+    private int getRealShield(int adaptedShield, Element shieldElement)
     {
         if (shieldElement.isSuperiorTo(this.getElement()))
         {
-            adaptedShield = adaptedShield / 2;
+            double decimalPlacesAdaptedShield = (float)adaptedShield / 2;
+            adaptedShield = (int)Math.ceil(decimalPlacesAdaptedShield);
         }
         
         if (shieldElement.isInferiorTo(this.getElement()))
